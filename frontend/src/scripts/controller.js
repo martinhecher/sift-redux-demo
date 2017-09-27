@@ -13,7 +13,7 @@ export default class MyController extends SiftController {
     setInterval(() => {
       this.publish('onStorageUpdate', {
         bucket: 'myBucket',
-        data: new Date()
+        data: new Date(),
       });
     }, 2000);
   }

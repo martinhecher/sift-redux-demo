@@ -2,33 +2,69 @@
  * Redux Demo Sift. Frontend view entry point.
  */
 import { SiftView, registerSiftView } from '@redsift/sift-sdk-web';
+import { createStore } from 'redux';
+
+const demoApp = (state = {}, action) => {
+  switch (action.type) {
+    case 'STORAGE_UPDATE':
+      const { bucket, data } = action.payload;
+      
+      return {
+        ...state,
+        [bucket]: data,
+      };
+    default:
+      return state;
+  }
+}
 
 export default class MyView extends SiftView {
   constructor() {
     // You have to call the super() method to initialize the base class.
     super();
 
-    this.controller.subscribe('onStorageUpdate', (data) => {
-      console.log('VIEW: data', data);
-
-      this._updateUI({
-        data,
-      });
-    })
+    this._store = null;
   }
 
-  // for more info: http://docs.redsift.com/docs/client-code-siftview
   presentView(value) {
+    if (!this._store) {
+      this._store = this._createStore(demoApp);
+
+      this._store.subscribe(() => {
+        this._updateUI({
+          data: this._store.getState(),
+        });
+      });
+    }
+
     this._updateUI({
-      data: value ? value.data : null,
+      data: this._store.getState(),
     });
   };
 
   willPresentView(value) {
     this._updateUI({
-      data: value ? value.data : null,
+      data: this._store.getState(),
     });
   };
+
+  _createStore(reducer) {
+    const store = createStore(reducer);
+
+    this.controller.subscribe('onStorageUpdate', ({ bucket, data }) => {
+      console.log('VIEW: data', { bucket, data });
+
+      store.dispatch({
+        type: 'STORAGE_UPDATE',
+        payload: {
+          bucket,
+          data,
+        },
+      });
+    });
+
+    return store;
+  }
 
   _updateUI({ data }) {
     document.getElementById('text').innerText = JSON.stringify(data, null, 4);

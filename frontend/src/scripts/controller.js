@@ -9,24 +9,33 @@ export default class MyController extends SiftController {
     super();
 
     this.onStorageUpdate = this.onStorageUpdate.bind(this);
-
-    setInterval(() => {
-      this.publish('onStorageUpdate', {
-        bucket: 'myBucket',
-        data: new Date(),
-      });
-    }, 2000);
   }
 
   loadView(state) {
     console.log('sift-redux-demo: loadView', state);
     // Register for storage update events on the "x" bucket so we can update the UI
     
+    const buckets = [
+      'bucket1',
+      'bucket2',
+      'bucket3',
+      'bucket4',
+    ];
+
+    setInterval(() => {
+      const randomId = Math.floor(Math.random() * buckets.length);
+
+      this.publish('onStorageUpdate', {
+        bucket: buckets[randomId],
+        data: new Date(),
+      });
+    }, 2000);
+
     switch (state.type) {
       case 'summary':
         return {
           html: 'summary.html',
-          data: {}
+          data: await getAllBuckets({ buckets }),
         };
       default:
         console.error('sift-redux-demo: unknown Sift type: ', state.type);
@@ -41,7 +50,19 @@ export default class MyController extends SiftController {
     });
   }
 
-   getBucket({ bucket }) {
+  async getAllBuckets({ buckets }) {
+    const result = {};
+
+    for (let idx = 0; idx < buckets.length; idx++) {
+      const bucket = buckets[idx];
+
+      result[bucket] = await getBucket({ bucket });
+    }
+
+    return result;
+  }
+
+  getBucket({ bucket }) {
     return this.storage.getAll({
       bucket,
     }).then((values) => {

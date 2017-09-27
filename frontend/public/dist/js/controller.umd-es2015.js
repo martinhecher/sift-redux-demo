@@ -54,6 +54,8 @@
 	
 	var _siftSdkWeb = __webpack_require__(8);
 	
+	function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -74,21 +76,27 @@
 	
 	
 	    _this.onStorageUpdate = _this.onStorageUpdate.bind(_this);
-	
-	    setInterval(function () {
-	      _this.publish('onStorageUpdate', {
-	        bucket: 'myBucket',
-	        data: new Date()
-	      });
-	    }, 2000);
 	    return _this;
 	  }
 	
 	  _createClass(MyController, [{
 	    key: 'loadView',
 	    value: function loadView(state) {
+	      var _this2 = this;
+	
 	      console.log('sift-redux-demo: loadView', state);
 	      // Register for storage update events on the "x" bucket so we can update the UI
+	
+	      var buckets = ['bucket1', 'bucket2', 'bucket3', 'bucket4'];
+	
+	      setInterval(function () {
+	        var randomId = Math.floor(Math.random() * buckets.length);
+	
+	        _this2.publish('onStorageUpdate', {
+	          bucket: buckets[randomId],
+	          data: new Date()
+	        });
+	      }, 2000);
 	
 	      switch (state.type) {
 	        case 'summary':
@@ -103,18 +111,66 @@
 	  }, {
 	    key: 'onStorageUpdate',
 	    value: function onStorageUpdate(bucket) {
-	      var _this2 = this;
+	      var _this3 = this;
 	
 	      console.log('sift-redux-demo: onStorageUpdate: ', value);
 	      return this.getBucket({ bucket: bucket }).then(function (xe) {
 	        // Publish events from 'x' to view
-	        _this2.publish('counts', xe);
+	        _this3.publish('counts', xe);
 	      });
 	    }
 	  }, {
+	    key: 'getAllBuckets',
+	    value: function () {
+	      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(_ref2) {
+	        var buckets = _ref2.buckets;
+	        var result, idx, bucket;
+	        return regeneratorRuntime.wrap(function _callee$(_context) {
+	          while (1) {
+	            switch (_context.prev = _context.next) {
+	              case 0:
+	                result = {};
+	                idx = 0;
+	
+	              case 2:
+	                if (!(idx < buckets.length)) {
+	                  _context.next = 10;
+	                  break;
+	                }
+	
+	                bucket = buckets[idx];
+	                _context.next = 6;
+	                return getBucket({ bucket: bucket });
+	
+	              case 6:
+	                result[bucket] = _context.sent;
+	
+	              case 7:
+	                idx++;
+	                _context.next = 2;
+	                break;
+	
+	              case 10:
+	                return _context.abrupt('return', result);
+	
+	              case 11:
+	              case 'end':
+	                return _context.stop();
+	            }
+	          }
+	        }, _callee, this);
+	      }));
+	
+	      function getAllBuckets(_x) {
+	        return _ref.apply(this, arguments);
+	      }
+	
+	      return getAllBuckets;
+	    }()
+	  }, {
 	    key: 'getBucket',
-	    value: function getBucket(_ref) {
-	      var bucket = _ref.bucket;
+	    value: function getBucket(_ref3) {
+	      var bucket = _ref3.bucket;
 	
 	      return this.storage.getAll({
 	        bucket: bucket

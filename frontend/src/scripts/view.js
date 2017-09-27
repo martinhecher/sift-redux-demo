@@ -28,7 +28,9 @@ export default class MyView extends SiftView {
 
   presentView(value) {
     if (!this._store) {
-      this._store = this._createStore(demoApp);
+      const initialState = value.data;
+
+      this._store = this._createStore(demoApp, initialState);
 
       this._store.subscribe(() => {
         this._updateUI({
@@ -48,8 +50,8 @@ export default class MyView extends SiftView {
     });
   };
 
-  _createStore(reducer) {
-    const store = createStore(reducer);
+  _createStore(reducer, initialState) {
+    const store = createStore(reducer, initialState);
 
     this.controller.subscribe('onStorageUpdate', ({ bucket, data }) => {
       console.log('VIEW: data', { bucket, data });

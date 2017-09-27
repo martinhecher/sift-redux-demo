@@ -100,9 +100,6 @@
 	    return _this;
 	  }
 	
-	  // for more info: http://docs.redsift.com/docs/client-code-siftview
-	
-	
 	  _createClass(MyView, [{
 	    key: 'presentView',
 	    value: function presentView(value) {

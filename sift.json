@@ -29,11 +29,11 @@
       "implementation": {
         "javascript": "server/node1.js",
         "when":{
-          "interval": 900
+          "interval": 1
         }
       },
       "outputs": {
-        "output1": {}
+        "count": {}
       }
     }],
     "stores":{
@@ -41,6 +41,12 @@
         "key$schema":"string"
       }
     },
-    "outputs":{}
+    "outputs":{
+      "exports": {
+        "count": {
+          "key$schema": "string"
+        }
+      }
+    }
   }
 }

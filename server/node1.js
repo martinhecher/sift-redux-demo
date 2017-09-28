@@ -13,18 +13,12 @@
 // for more info have a look at:
 // http://docs.redsift.com/docs/server-code-implementation
 module.exports = function (got) {
-  const inData = got.in;
+  const data = new Date();
 
-  console.log('sift-redux-demo: node1.js: data received:', inData.data);
-
-  const json = inData.data.map(d => JSON.parse(d.value));
-  json.forEach(function(value, i){
-    console.log('datum#', i, 'value:', value)
-  })
+  console.log('sift-redux-demo: node1.js: write data to export:', data);
 
   return [{
-    name: 'output1',
-    key: 'dataLength',
-    value: json.length
+    key: 'email1',
+    value: data,
   }];
 };

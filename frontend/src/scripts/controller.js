@@ -4,7 +4,7 @@
 import { SiftController, registerSiftController } from '@redsift/sift-sdk-web';
 
 import siftJSON from '../../../sift.json';
-
+debugger;
 // read exports from sift.json:
 let exports = siftJSON.dag.outputs && siftJSON.dag.outputs.exports ? Object.keys(siftJSON.dag.outputs.exports) : [];
 
@@ -29,17 +29,17 @@ export default class MyController extends SiftController {
     console.log('sift-redux-demo: loadView', state);
 
     // TODO: replace test code below with this line after adding exports to backend!
-    // this.storage.subscribe(exports, this._onStorageUpdate);
+    this.storage.subscribe(exports, this._onStorageUpdate);
 
-    // TEST: simulate storageUpdate events:
-    setInterval(() => {
-      const randomId = Math.floor(Math.random() * exports.length);
+    // // TEST: simulate storageUpdate events:
+    // setInterval(() => {
+    //   const randomId = Math.floor(Math.random() * exports.length);
 
-      this.publish('onStorageUpdate', {
-        bucket: exports[randomId],
-        data: new Date(),
-      });
-    }, 2000);
+    //   this.publish('onStorageUpdate', {
+    //     bucket: exports[randomId],
+    //     data: new Date(),
+    //   });
+    // }, 2000);
 
     switch (state.type) {
       case 'summary':

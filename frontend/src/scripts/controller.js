@@ -3,12 +3,19 @@
  */
 import { SiftController, registerSiftController } from '@redsift/sift-sdk-web';
 
-// TODO: read this list from sift.json exports!
-const buckets = [
-  '_org',
+import siftJSON from '../../../sift.json';
+
+// read export buckets from sift.json:
+let buckets = siftJSON.dag.outputs && siftJSON.dag.outputs.exports ? Object.keys(siftJSON.dag.outputs.exports) : [];
+
+// add system buckets:
+buckets = [
+  ...buckets,
   '_user.default',
   '_redsift',
 ];
+
+console.log('sift-redux-demo: buckets:', buckets);
 
 export default class MyController extends SiftController {
   constructor() {
@@ -66,8 +73,8 @@ export default class MyController extends SiftController {
       try {
         result[bucket] = await this._getBucket({ bucket });
       } catch(err) {
-        console.log(`[SiftController::_getAllBuckets] ERROR reading bucket, it may not exist in the IndexedDB | bucket: ${bucket}`);
-        console.log('ERROR:', err);
+        console.log(`[SiftController::_getAllBuckets] ERROR reading bucket, it may not exist in the IndexedDB | bucket: ${bucket} | error:`, err);
+        console.log('[SiftController::_getAllBuckets] We continue with the next bucket...');
       }
     }
 

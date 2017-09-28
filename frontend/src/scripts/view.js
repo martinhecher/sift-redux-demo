@@ -10,7 +10,7 @@ const demoApp = (state = {}, action) => {
       const { bucket, data } = action.payload;
 
       return {
-        // ...state,
+        ...state,
         [bucket]: data,
       };
     default:
@@ -27,6 +27,9 @@ export default class MyView extends SiftView {
   }
 
   presentView(value) {
+    console.log('[SiftView::presentView] value:', value);
+    console.log('[SiftView::presentView] this._store:', this._store);
+
     if (!this._store) {
       const initialState = value.data;
 

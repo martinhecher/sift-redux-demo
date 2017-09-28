@@ -1,22 +1,21 @@
 {
   "name": "sift-redux-demo",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Connect a Sift storage to Redux",
   "scripts": {
     "build": "gulp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@redsift/ui-rs-core": "^0.8.3",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-es2017": "^6.24.1",
     "redux": "^3.7.2"
   },
   "devDependencies": {
-    "@redsift/redsift-bundler": "0.7.3",
     "@redsift/sift-sdk-web": "0.7.0",
-    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
     "gulp": "^3.9.1",
     "webpack": "^3.6.0"
   }

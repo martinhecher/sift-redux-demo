@@ -8,9 +8,9 @@ const demoApp = (state = {}, action) => {
   switch (action.type) {
     case 'STORAGE_UPDATE':
       const { bucket, data } = action.payload;
-      
+
       return {
-        ...state,
+        // ...state,
         [bucket]: data,
       };
     default:

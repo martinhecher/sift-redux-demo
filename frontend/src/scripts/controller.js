@@ -11,10 +11,10 @@ export default class MyController extends SiftController {
     this.onStorageUpdate = this.onStorageUpdate.bind(this);
   }
 
-  loadView(state) {
+  async loadView(state) {
     console.log('sift-redux-demo: loadView', state);
     // Register for storage update events on the "x" bucket so we can update the UI
-    
+
     const buckets = [
       'bucket1',
       'bucket2',

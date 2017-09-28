@@ -3,7 +3,7 @@
 var webpack = require('webpack'),
     path = require('path');
 
-var siftRootPath = path.resolve('../');
+// var siftRootPath = path.resolve('../');
 
 module.exports = {
     cache: true,
@@ -18,7 +18,7 @@ module.exports = {
     },
     resolve: {
         // modules: ['node_modules'],
-        extensions: ['.js', '.jsx']
+        extensions: ['.js', '.jsx'],
     },
     plugins: [
         new webpack.optimize.OccurrenceOrderPlugin(),
@@ -30,16 +30,10 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.jsx?$/,
-                exclude: /node_modules/,
+                test: /\.js$/,
+                exclude: /(node_modules|bower_components)/,
                 use: {
                     loader: 'babel-loader?cacheDirectory',
-                    options: {
-                        presets: [
-                            require.resolve('babel-preset-es2015'),
-                            require.resolve('babel-preset-es2017'),
-                        ]
-                    }
                 }
             },
         ],

@@ -4,18 +4,18 @@
 import { SiftController, registerSiftController } from '@redsift/sift-sdk-web';
 
 import siftJSON from '../../../sift.json';
-debugger;
-// read exports from sift.json:
-let exports = siftJSON.dag.outputs && siftJSON.dag.outputs.exports ? Object.keys(siftJSON.dag.outputs.exports) : [];
 
-// add system exports:
-exports = [
-  ...exports,
+// read buckets from sift.json:
+let buckets = siftJSON.dag.outputs && siftJSON.dag.outputs.exports ? Object.keys(siftJSON.dag.outputs.exports) : [];
+
+// add system buckets:
+buckets = [
+  ...buckets,
   '_user.default',
   '_redsift',
 ];
 
-console.log('sift-redux-demo: exports:', exports);
+console.log('sift-redux-demo: buckets:', buckets);
 
 export default class MyController extends SiftController {
   constructor() {
@@ -28,15 +28,15 @@ export default class MyController extends SiftController {
   loadView(state) {
     console.log('sift-redux-demo: loadView', state);
 
-    // TODO: replace test code below with this line after adding exports to backend!
-    this.storage.subscribe(exports, this._onStorageUpdate);
+    // TODO: replace test code below with this line after adding buckets to backend!
+    this.storage.subscribe(buckets, this._onStorageUpdate);
 
     // // TEST: simulate storageUpdate events:
     // setInterval(() => {
-    //   const randomId = Math.floor(Math.random() * exports.length);
+    //   const randomId = Math.floor(Math.random() * buckets.length);
 
     //   this.publish('onStorageUpdate', {
-    //     bucket: exports[randomId],
+    //     bucket: buckets[randomId],
     //     data: new Date(),
     //   });
     // }, 2000);
@@ -45,7 +45,7 @@ export default class MyController extends SiftController {
       case 'summary':
         return {
           html: 'summary.html',
-          data: this._getInitialData({ exports }),
+          data: this._getInitialData({ buckets }),
         };
       default:
         console.error('sift-redux-demo: unknown Sift type: ', state.type);
@@ -53,28 +53,28 @@ export default class MyController extends SiftController {
   }
 
   async _onStorageUpdate(bucket) {
-    console.log('sift-redux-demo: onStorageUpdate: ', value);
+    console.log('sift-redux-demo: onStorageUpdate: ', bucket);
 
-    const storage = await this._getAllexports();
+    const storage = await this._getAllBuckets({ buckets });
 
     this.publish('onStorageUpdate', storage);
   }
 
-  async _getInitialData({ exports }) {
-    return this._getAllexports({ exports });
+  async _getInitialData({ buckets }) {
+    return this._getAllBuckets({ buckets });
   }
 
-  async _getAllexports({ exports }) {
+  async _getAllBuckets({ buckets }) {
     const result = {};
 
-    for (let idx = 0; idx < exports.length; idx++) {
-      const bucket = exports[idx];
+    for (let idx = 0; idx < buckets.length; idx++) {
+      const bucket = buckets[idx];
 
       try {
         result[bucket] = await this._getBucket({ bucket });
       } catch(err) {
-        console.log(`[SiftController::_getAllexports] ERROR reading bucket, it may not exist in the IndexedDB | bucket: ${bucket} | error:`, err);
-        console.log('[SiftController::_getAllexports] We continue with the next bucket...');
+        console.log(`[SiftController::_getAllBuckets] ERROR reading bucket, it may not exist in the IndexedDB | bucket: ${bucket} | error:`, err);
+        console.log('[SiftController::_getAllBuckets] We continue with the next bucket...');
       }
     }
 

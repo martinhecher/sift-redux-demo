@@ -6,13 +6,14 @@ import { createStore } from 'redux';
 
 const demoApp = (state = {}, action) => {
   switch (action.type) {
-    case 'STORAGE_UPDATE':
-      const { bucket, data } = action.payload;
+    case 'STORAGE_UPDATE': {
+      const storage = action.payload;
 
       return {
         ...state,
-        [bucket]: data,
+        ...storage,
       };
+    }
     default:
       return state;
   }
@@ -28,7 +29,6 @@ export default class MyView extends SiftView {
 
   presentView(value) {
     console.log('[SiftView::presentView] value:', value);
-    console.log('[SiftView::presentView] this._store:', this._store);
 
     if (!this._store) {
       const initialState = value.data;
@@ -56,15 +56,12 @@ export default class MyView extends SiftView {
   _createStore(reducer, initialState) {
     const store = createStore(reducer, initialState);
 
-    this.controller.subscribe('onStorageUpdate', ({ bucket, data }) => {
-      console.log('VIEW: data', { bucket, data });
+    this.controller.subscribe('onStorageUpdate', (storage) => {
+      console.log('VIEW: storage', storage);
 
       store.dispatch({
         type: 'STORAGE_UPDATE',
-        payload: {
-          bucket,
-          data,
-        },
+        payload: storage,
       });
     });
 

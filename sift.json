@@ -25,7 +25,7 @@
       "webhooks": {}
     },
     "nodes":[{
-      "#": "First Node",
+      "#": "Trigger me!",
       "implementation": {
         "javascript": "server/node1.js",
         "when":{
